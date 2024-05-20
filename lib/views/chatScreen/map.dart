@@ -38,11 +38,20 @@ class _MapScreenState extends State<MapScreen> {
 
   void onSendLocation() {
     if (selectedLocation != null) {
-      Navigator.pop(context, selectedLocation);
+      Navigator.pop(context, {
+        "latitude": selectedLocation!.latitude,
+        "longitude": selectedLocation!.longitude
+      });
     } else if (currentLocation != null) {
-      Navigator.pop(context, LatLng(currentLocation!.latitude!, currentLocation!.longitude!));
+      Navigator.pop(context, {
+        "latitude": currentLocation!.latitude,
+        "longitude": currentLocation!.longitude
+      });
     } else {
-      Navigator.pop(context, defaultLocation);
+      Navigator.pop(context, {
+        "latitude": defaultLocation.latitude,
+        "longitude": defaultLocation.longitude
+      });
     }
   }
 
@@ -64,8 +73,8 @@ class _MapScreenState extends State<MapScreen> {
             onMapCreated: (GoogleMapController controller) {
               mapController = controller;
               if (currentLocation != null) {
-                mapController.animateCamera(CameraUpdate.newLatLng(
-                    LatLng(currentLocation!.latitude!, currentLocation!.longitude!)));
+                mapController.animateCamera(CameraUpdate.newLatLng(LatLng(
+                    currentLocation!.latitude!, currentLocation!.longitude!)));
               }
             },
             initialCameraPosition: CameraPosition(
@@ -87,7 +96,9 @@ class _MapScreenState extends State<MapScreen> {
             bottom: 16.0,
             right: 16.0,
             child: FloatingActionButton(
-              onPressed: selectedLocation != null || currentLocation != null ? onSendLocation : null,
+              onPressed: selectedLocation != null || currentLocation != null
+                  ? onSendLocation
+                  : null,
               child: Icon(Icons.send),
             ),
           ),

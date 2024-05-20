@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 5),
+      duration: Duration(seconds:20),
     );
     _animation =
         CurvedAnimation(parent: _animationController, curve: Curves.easeInOut)
@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen>
         curve: Curves.easeInOut,
       ),
     );
-    _animationController.repeat(reverse: true);
+    _animationController.repeat(reverse: false);
   }
 
   @override
@@ -57,34 +57,46 @@ class _HomeScreenState extends State<HomeScreen>
             left: 0,
             right: 0,
             child: Opacity(
-              opacity: _animation.value,
-              child: Container(
-                alignment: Alignment.center,
-                child: Text(
-                  'Welcome',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+              opacity: 1.0,
+              child: Column(
+                children: [
+                  Text(
+                    'Welcome',
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
+                  SizedBox(height: 10), // Adjust as needed
+                  Text(
+                    'Tour Mate',
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-          Positioned.fill(
-            child: Center(
-              child: AnimatedBuilder(
-                animation: _animationController,
-                builder: (BuildContext context, Widget? child) {
-                  return Transform.scale(
-                    scale: _animation.value,
-                    child: Icon(
-                      Icons.bluetooth,
-                      size: 80.0,
-                      color: Colors.blue,
-                    ),
-                  );
-                },
+          Positioned(
+            top: MediaQuery.of(context).size.height / 2 - 80,
+            left: MediaQuery.of(context).size.width / 2 - 60,
+            child: GestureDetector(
+              onTap: () {
+                // Navigate to Bluetooth device screen
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => BluetoothDeviceView()),
+                );
+              },
+              child: Icon(
+                Icons.warning,
+                size: 120.0,
+                color: Colors.red,
               ),
             ),
           ),
@@ -92,15 +104,15 @@ class _HomeScreenState extends State<HomeScreen>
       ),
       bottomNavigationBar: BottomAppBar(
         elevation: 10,
-        color: Colors.transparent, // Set the background color of the app bar
+        color: Colors.transparent,
         child: Container(
-          height: 60, // Adjust the height as needed
+          height: 60,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
             ),
-            color: Colors.blue, // Set the background color of the container
+            color: Color.fromARGB(255, 248, 0, 0),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -155,4 +167,3 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 }
-

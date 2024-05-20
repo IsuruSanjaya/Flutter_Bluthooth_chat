@@ -45,6 +45,8 @@ dependencies:
   get: ^4.6.5
   flutter_bluetooth_serial: ^0.4.0
   font_awesome_flutter: ^10.4.0
+  rename_app: ^1.1.0
+
 
 
   

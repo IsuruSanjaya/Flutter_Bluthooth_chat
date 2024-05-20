@@ -3,7 +3,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as flutterBluePlus;
-import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart' as flutterBluetoothSerial;
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart'
+    as flutterBluetoothSerial;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_scope/views/chatScreen/map.dart';
 import 'package:location/location.dart';
@@ -38,7 +39,10 @@ class _ChatScreenState extends State<ChatScreen> {
   void _onDataReceived(Uint8List data) {
     setState(() {
       String message = String.fromCharCodes(data).trim();
-      _messages.add({"message": message, "sender": widget.device.name ?? 'Unknown Device'});
+      _messages.add({
+        "message": message,
+        "sender": widget.device.name ?? 'Unknown Device'
+      });
       _saveMessages();
     });
   }
@@ -49,7 +53,9 @@ class _ChatScreenState extends State<ChatScreen> {
     if (messages != null) {
       setState(() {
         _messages.clear();
-        _messages.addAll(messages.map((msg) => Map<String, String>.from(jsonDecode(msg))).toList());
+        _messages.addAll(messages
+            .map((msg) => Map<String, String>.from(jsonDecode(msg)))
+            .toList());
       });
     }
   }
@@ -57,7 +63,8 @@ class _ChatScreenState extends State<ChatScreen> {
   void _sendMessage(String message) async {
     if (message.isNotEmpty) {
       try {
-        widget.connection.output.add(Uint8List.fromList(utf8.encode(message + "\r\n")));
+        widget.connection.output
+            .add(Uint8List.fromList(utf8.encode(message + "\r\n")));
         await widget.connection.output.allSent;
         setState(() {
           _messages.add({"message": message, "sender": "Me"});
@@ -97,14 +104,14 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _navigateToMapScreen() async {
-    final LatLng? locationData = await Navigator.of(context).push(
+    final Map<String, dynamic>? locationData = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => MapScreen(),
       ),
     );
     if (locationData != null) {
-      double latitude = locationData.latitude;
-      double longitude = locationData.longitude;
+      double latitude = locationData['latitude'];
+      double longitude = locationData['longitude'];
       _sendMessage('Location: $latitude, $longitude');
     }
   }
@@ -114,6 +121,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Chat with ${widget.device.name ?? 'Unknown Device'}'),
+        backgroundColor: Colors.red, // Set app bar color to red
       ),
       body: Column(
         children: <Widget>[
@@ -145,7 +153,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
                 IconButton(
-                  icon: FaIcon(FontAwesomeIcons.mapMarkerAlt), // Use Google Maps icon
+                  icon: FaIcon(
+                      FontAwesomeIcons.mapMarkerAlt), // Use Google Maps icon
                   onPressed: _navigateToMapScreen,
                 ),
                 IconButton(
@@ -177,19 +186,22 @@ class MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+      mainAxisAlignment:
+          isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: <Widget>[
         Flexible(
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
             decoration: BoxDecoration(
-              color: isSentByMe ? Colors.blue : Colors.grey,
+              color: isSentByMe ? Color.fromARGB(255, 248, 0, 0) : Colors.grey,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20),
                 topRight: Radius.circular(20),
-                bottomLeft: isSentByMe ? Radius.circular(20) : Radius.circular(0),
-                bottomRight: isSentByMe ? Radius.circular(0) : Radius.circular(20),
+                bottomLeft:
+                    isSentByMe ? Radius.circular(20) : Radius.circular(0),
+                bottomRight:
+                    isSentByMe ? Radius.circular(0) : Radius.circular(20),
               ),
             ),
             child: Wrap(
